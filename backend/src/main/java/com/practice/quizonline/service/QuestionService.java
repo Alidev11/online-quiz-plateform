@@ -3,6 +3,9 @@ package com.practice.quizonline.service;
 import com.practice.quizonline.model.Question;
 import com.practice.quizonline.repository.QuestionRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.crossstore.ChangeSetPersister;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -42,22 +45,28 @@ public class QuestionService implements IQuestionService {
     }
 
     @Override
-    public Question updateQuestion(Long id, Question question) {
+    public Question updateQuestion(Long id, Question question) throws ChangeSetPersister.NotFoundException {
         Optional<Question> theQuestion = this.getQuestionById(id);
         if(theQuestion.isPresent()){
-            Question ques = theQuestion.get();
+            Question updatedQuestion = theQuestion.get();
+            updatedQuestion.setQuestion(question.getQuestion());
+            updatedQuestion.setChoices(question.getChoices());
+            updatedQuestion.setCorrectAnswers(question.getCorrectAnswers());
+            return questionRepository.save(updatedQuestion);
+        }else{
+            throw new ChangeSetPersister.NotFoundException();
         }
 
-        return null;
     }
 
     @Override
     public void deleteQuestion(Long id) {
-
+        questionRepository.deleteById(id);
     }
 
     @Override
     public List<Question> getQuestionsForUser(Integer numOfQuestions, String subject) {
-        return List.of();
+        Pageable pageable = PageRequest.of(0, numOfQuestions);
+        return questionRepository.findBySubject(subject, pageable).getContent();
     }
 }

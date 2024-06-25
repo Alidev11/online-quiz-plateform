@@ -2,7 +2,6 @@ package com.practice.quizonline.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import lombok.Generated;
 import lombok.Getter;
 import lombok.Setter;
 
