@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export const api = axios.create({
-    baseURL: "http//localhost:9192/api/quizzes"
+    baseURL: "http://localhost:9192/api/quizzes",
 })
 
 
@@ -11,6 +11,7 @@ export const createQuestion = async(quizQuestion) => {
         return response.data;
     }catch (error){
         console.error(error);
+        return [];
     }
 }
 
@@ -38,7 +39,7 @@ export const fetchQuizForUser = async(number, subject) => {
 export const getSubjects = async() => {
     try {
         const response = await api.get("/subjects");
-        return response.data
+        return response.data;
     } catch (error) {
         console.error(error);
     }
@@ -47,7 +48,7 @@ export const getSubjects = async() => {
 export const updateQuestion = async(id, question) => {
     try {
         const response = await api.put(`/question/${id}/update`, question);
-        return response.data
+        return response.data;
     } catch (error) {
         console.error(error);
     }
